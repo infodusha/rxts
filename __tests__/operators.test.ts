@@ -1,4 +1,4 @@
-import { delay, filter, map, switchMap, tap } from '../src/operators';
+import { delay, filter, map, switchMap, take, tap } from '../src/operators';
 import { from } from '../src/helpers';
 import { tick, toHaveBeenCalledTimesWith } from './tests';
 
@@ -55,5 +55,13 @@ describe('Operators', () => {
     expect(next).not.toHaveBeenCalled();
     await tick(100);
     toHaveBeenCalledTimesWith(next, 1, 2, 3);
+  });
+
+  it('should work with take', async () => {
+    const next = jest.fn();
+    from([1, 2, 3, 4]).pipe(take(2)).subscribe({ next });
+    await tick();
+    await tick(100);
+    toHaveBeenCalledTimesWith(next, 1, 2);
   });
 });

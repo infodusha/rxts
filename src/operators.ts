@@ -36,6 +36,21 @@ export function delay<T>(due: number): UnaryOperator<T> {
   });
 }
 
+export function take<T>(count: number): UnaryOperator<T> {
+  return operator(async function* (generator: AnyGenerator<T>) {
+    let i = count;
+    for await (const value of generator) {
+      if (i-- <= 0) {
+        return;
+      }
+      yield value;
+      if (i <= 0) {
+        return;
+      }
+    }
+  });
+}
+
 // TODO finish later
 // export function takeUntil<T>(observable$: Observable<unknown>): UnaryOperator<T> {
 //     return operator(async function* (generator: AnyGenerator<T>, sub?: Subscription) {
