@@ -40,6 +40,16 @@ export function defer<T>(observableFactory: () => ObservableInput<T>): Observabl
   });
 }
 
+export function interval(period = 0): Observable<number> {
+  return new Observable<number>(() => async function* () {
+    let i = 0;
+    while (true) {
+      await new Promise((resolve) => setTimeout(resolve, period));
+      yield i++;
+    }
+  });
+}
+
 export function itemOperator<T, R>(operator: (item: T) => AnyGenerator<R>): (startOperator: StartOperator<T>) => StartOperator<R> {
   return (startOperator) => async function* (sub?: Subscription) {
     if (sub?.isCancelled) return;

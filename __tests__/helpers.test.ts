@@ -1,4 +1,4 @@
-import { defer, EMPTY, firstValueFrom, from, generatorFrom, of } from '../src/helpers';
+import { defer, EMPTY, firstValueFrom, from, generatorFrom, interval, of } from '../src/helpers';
 import { tick, toHaveBeenCalledTimesWith } from './tests';
 
 describe('Helpers', () => {
@@ -69,6 +69,28 @@ describe('Helpers', () => {
     expect(build).toHaveBeenCalledTimes(1);
     expect(next).toHaveBeenCalledTimes(1);
     expect(next).toHaveBeenNthCalledWith(1, 1);
+  });
+
+  it('should work with interval', async () => {
+    const next = jest.fn();
+    const sub = interval(100).subscribe({ next });
+    await tick();
+    expect(next).not.toHaveBeenCalled();
+    await tick(100);
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(next).toHaveBeenNthCalledWith(1, 0);
+    await tick(100);
+    expect(next).toHaveBeenCalledTimes(2);
+    expect(next).toHaveBeenNthCalledWith(2, 1);
+    await tick(100);
+    expect(next).toHaveBeenCalledTimes(3);
+    expect(next).toHaveBeenNthCalledWith(3, 2);
+
+    sub.unsubscribe();
+    await tick(100);
+    expect(next).toHaveBeenCalledTimes(3);
+    await tick(100);
+    expect(next).toHaveBeenCalledTimes(3);
   });
 
   it('should work with EMPTY', async () => {
