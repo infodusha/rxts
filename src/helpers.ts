@@ -1,6 +1,8 @@
 import { AnyGenerator, Observable, StartOperator } from './index';
 import { Subscription } from './subscription';
 
+export type ObservableInput<T> = Observable<T> | Iterable<T> | AsyncIterable<T> | Promise<T>;
+
 export async function firstValueFrom<T>(observable: Observable<T>): Promise<T> {
   const generator: AnyGenerator<T> = observable._startOperator();
   const { value } = await generator.next();
@@ -11,9 +13,16 @@ export function generatorFrom<T>(stream: Observable<T>): AnyGenerator<T> {
   return stream._startOperator();
 }
 
-export function from<T>(data: Iterable<T>): Observable<T> {
-  return new Observable<T>(() => function* () {
-    for (const item of data) {
+export function from<T>(data: ObservableInput<T>): Observable<T> {
+  if (data instanceof Observable) {
+    return data;
+  }
+  return new Observable<T>(() => async function* () {
+    if (data instanceof Promise) {
+      yield await data;
+      return;
+    }
+    for await (const item of data) {
       yield item;
     }
   });
@@ -22,6 +31,12 @@ export function from<T>(data: Iterable<T>): Observable<T> {
 export function of<T>(data: T): Observable<T> {
   return new Observable<T>(() => function* () {
     yield data;
+  });
+}
+
+export function defer<T>(observableFactory: () => ObservableInput<T>): Observable<T> {
+  return new Observable<T>(() => async function* () {
+    yield* await generatorFrom(from(observableFactory()));
   });
 }
 

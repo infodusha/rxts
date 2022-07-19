@@ -1,4 +1,4 @@
-import { EMPTY, firstValueFrom, from, generatorFrom, of } from '../src/helpers';
+import { defer, EMPTY, firstValueFrom, from, generatorFrom, of } from '../src/helpers';
 import { tick, toHaveBeenCalledTimesWith } from './tests';
 
 describe('Helpers', () => {
@@ -16,11 +16,37 @@ describe('Helpers', () => {
     expect(result).toStrictEqual([1, 2, 3]);
   });
 
-  it('should work with from', async () => {
+  it('should work with from observable', async () => {
+    const next = jest.fn();
+    from(from([1, 2, 3])).subscribe({ next });
+    await tick();
+    toHaveBeenCalledTimesWith(next, 1, 2, 3);
+  });
+
+  it('should work with from iterable', async () => {
     const next = jest.fn();
     from([1, 2, 3]).subscribe({ next });
     await tick();
     toHaveBeenCalledTimesWith(next, 1, 2, 3);
+  });
+
+  it('should work with from async iterable', async () => {
+    const next = jest.fn();
+    async function* asyncIterable() {
+      yield 1;
+      yield 2;
+      yield 3;
+    }
+    from(asyncIterable()).subscribe({ next });
+    await tick();
+    toHaveBeenCalledTimesWith(next, 1, 2, 3);
+  });
+
+  it('should work with from promise', async () => {
+    const next = jest.fn();
+    from(Promise.resolve(1)).subscribe({ next });
+    await tick();
+    toHaveBeenCalledTimesWith(next, 1);
   });
 
   it('should work with of', async () => {
@@ -29,6 +55,20 @@ describe('Helpers', () => {
     await tick();
     expect(next).toHaveBeenCalledTimes(1);
     expect(next).toHaveBeenNthCalledWith(1, 42);
+  });
+
+  it('should work with defer', async () => {
+    const next = jest.fn();
+    const build = jest.fn((resolve) => resolve(1));
+    const observable$ = defer(() => new Promise(build));
+    await tick();
+    expect(build).not.toHaveBeenCalled();
+    expect(next).not.toHaveBeenCalled();
+    observable$.subscribe({ next });
+    await tick();
+    expect(build).toHaveBeenCalledTimes(1);
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(next).toHaveBeenNthCalledWith(1, 1);
   });
 
   it('should work with EMPTY', async () => {
