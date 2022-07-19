@@ -1,4 +1,4 @@
-import { delay, filter, map, switchMap, take, tap } from '../src/operators';
+import { delay, distinctUntilChanged, filter, map, switchMap, take, tap } from '../src/operators';
 import { from } from '../src/helpers';
 import { tick, toHaveBeenCalledTimesWith } from './tests';
 
@@ -63,5 +63,21 @@ describe('Operators', () => {
     await tick();
     await tick(100);
     toHaveBeenCalledTimesWith(next, 1, 2);
+  });
+
+  it('should work with distinctUntilChanged', async () => {
+    const next = jest.fn();
+    from([1, 2, 2, 2, 3, 4, 4]).pipe(distinctUntilChanged()).subscribe({ next });
+    await tick();
+    toHaveBeenCalledTimesWith(next, 1, 2, 3, 4);
+  });
+
+  it('should work with distinctUntilChanged with comparator', async () => {
+    const next = jest.fn();
+    from([{ id: 1 }, { id: 2 }, { id: 2 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 4 }]).pipe(
+      distinctUntilChanged((previous, current) => previous.id === current.id),
+    ).subscribe({ next });
+    await tick();
+    toHaveBeenCalledTimesWith(next, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 });
   });
 });

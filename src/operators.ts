@@ -51,6 +51,19 @@ export function take<T>(count: number): UnaryOperator<T> {
   });
 }
 
+export function distinctUntilChanged<T>(comparator?: (previous: T, current: T) => boolean): UnaryOperator<T> {
+  const NO_VALUE: unique symbol = Symbol('NO_VALUE');
+  return operator(async function* (generator: AnyGenerator<T>) {
+    let previous: T | typeof NO_VALUE = NO_VALUE;
+    for await (const value of generator) {
+      if (previous === NO_VALUE || !(comparator ? comparator(previous, value) : previous === value)) {
+        previous = value;
+        yield value;
+      }
+    }
+  });
+}
+
 // TODO finish later
 // export function takeUntil<T>(observable$: Observable<unknown>): UnaryOperator<T> {
 //     return operator(async function* (generator: AnyGenerator<T>, sub?: Subscription) {
