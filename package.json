@@ -1,7 +1,7 @@
 {
   "name": "rxts",
   "version": "0.2.0",
-  "description": "",
+  "description": "A reactive programming library for JavaScript & TypeScript",
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc",
