@@ -29,5 +29,6 @@ module.exports = {
       asyncArrow: 'always',
     }],
     'generator-star-spacing': ['error', 'after'],
+    'yield-star-spacing': ['error', 'after'],
   },
 };

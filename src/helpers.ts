@@ -31,7 +31,7 @@ export function itemOperator<T, R>(operator: (item: T) => AnyGenerator<R>): (sta
     const generator = startOperator(sub);
     for await (const value of generator) {
       if (sub?.isCancelled) return;
-      yield * operator(value);
+      yield* operator(value);
     }
   };
 }

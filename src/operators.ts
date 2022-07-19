@@ -4,7 +4,7 @@ import { generatorFrom, itemOperator, operator } from './helpers';
 // TODO That may be works as mergeMap, i am not sure about that
 export function switchMap<T, R>(callback: (value: T) => Observable<R>): Operator<T, R> {
   return itemOperator(async function* (value: T) {
-    yield * generatorFrom(callback(value));
+    yield* generatorFrom(callback(value));
   });
 }
 
@@ -32,7 +32,7 @@ export function filter<T>(callback: (value: T) => boolean): UnaryOperator<T> {
 export function delay<T>(due: number): UnaryOperator<T> {
   return operator(async function* (generator: AnyGenerator<T>) {
     await new Promise((resolve) => setTimeout(resolve, due));
-    yield * generator;
+    yield* generator;
   });
 }
 
