@@ -1,5 +1,6 @@
 import { Operator, Observable, UnaryOperator, AnyGenerator } from './index';
 import { generatorFrom, itemOperator, operator } from './helpers';
+import { Subscription } from './subscription';
 
 // TODO That may be works as mergeMap, i am not sure about that
 export function switchMap<T, R>(callback: (value: T) => Observable<R>): Operator<T, R> {
@@ -8,9 +9,9 @@ export function switchMap<T, R>(callback: (value: T) => Observable<R>): Operator
   });
 }
 
-export function map<T, R>(callback: (value: T) => R): Operator<T, R> {
+export function map<T, R>(project: (value: T) => R, thisArg?: any): Operator<T, R> {
   return itemOperator(function* (value) {
-    yield callback(value);
+    yield project.call(thisArg, value);
   });
 }
 
@@ -37,9 +38,10 @@ export function delay<T>(due: number): UnaryOperator<T> {
 }
 
 export function take<T>(count: number): UnaryOperator<T> {
-  return operator(async function* (generator: AnyGenerator<T>) {
+  return operator(async function* (generator: AnyGenerator<T>, sub?: Subscription) {
     let i = count;
     for await (const value of generator) {
+      if (sub?.isCancelled) return;
       if (i-- <= 0) {
         return;
       }
@@ -47,6 +49,7 @@ export function take<T>(count: number): UnaryOperator<T> {
       if (i <= 0) {
         return;
       }
+      if (sub?.isCancelled) return;
     }
   });
 }
