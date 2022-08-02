@@ -1,5 +1,4 @@
 {
-  "release-as": "0.2.1",
   "packages": {
     ".": {
       "releaseType": "node",
