@@ -9,9 +9,6 @@ jobs:
     steps:
       - uses: google-github-actions/release-please-action@v3
         id: release
-        with:
-          release-type: node
-          package-name: rxts
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
