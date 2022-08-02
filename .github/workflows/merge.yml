@@ -11,14 +11,16 @@ jobs:
         id: release
         with:
           release-type: node
-          bump-minor-pre-major: true
-          bump-patch-for-minor-pre-major: true
+          bump-minor-pre-major: 1
+          bump-patch-for-minor-pre-major: 1
           pull-request-title-pattern: 'chore: release ${version}'
       - uses: actions/checkout@v3
+        if: ${{ steps.release.outputs.release_created }}
       - uses: actions/setup-node@v3
         with:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
+        if: ${{ steps.release.outputs.release_created }}
       - run: npm ci
         if: ${{ steps.release.outputs.release_created }}
       - run: npm run test
