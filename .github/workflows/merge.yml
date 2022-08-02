@@ -1,4 +1,4 @@
-name: Release
+name: Merge
 on:
   push:
     branches:
@@ -13,7 +13,7 @@ jobs:
           release-type: node
           bump-minor-pre-major: true
           bump-patch-for-minor-pre-major: true
-          pull-request-title-pattern: 'chore: release${component} ${version}'
+          pull-request-title-pattern: 'chore: release ${version}'
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
