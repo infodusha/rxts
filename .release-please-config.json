@@ -1,6 +1,5 @@
 {
   "bump-minor-pre-major": true,
   "bump-patch-for-minor-pre-major": true,
-  "prerelease": true,
-  ".": "0.2.1"
+  "prerelease": true
 }
