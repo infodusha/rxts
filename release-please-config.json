@@ -1,17 +1,11 @@
 {
-  "bump-minor-pre-major": true,
-  "bump-patch-for-minor-pre-major": true,
-  "prerelease": true,
   "release-as": "0.2.1",
   "packages": {
     ".": {
       "releaseType": "node",
-      "draft": false,
-      "prerelease": false,
-      "bumpMinorPreMajor": false,
-      "bumpPatchForMinorPreMajor": false,
-      "changelogPath": "CHANGELOG.md",
-      "versioning": "default"
+      "prerelease": true,
+      "bumpMinorPreMajor": true,
+      "bumpPatchForMinorPreMajor": true
     }
   }
 }
