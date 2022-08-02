@@ -11,8 +11,8 @@ jobs:
         id: release
         with:
           release-type: node
-          bump-minor-pre-major: 1
-          bump-patch-for-minor-pre-major: 1
+          bump-minor-pre-major: true
+          bump-patch-for-minor-pre-major: true
           pull-request-title-pattern: 'chore: release ${version}'
       - uses: actions/checkout@v3
         if: ${{ steps.release.outputs.release_created }}
