@@ -4,9 +4,22 @@ import { Subscription } from './subscription';
 export type ObservableInput<T> = Observable<T> | Iterable<T> | AsyncIterable<T> | Promise<T>;
 
 export async function firstValueFrom<T>(observable: Observable<T>): Promise<T> {
-  const generator: AnyGenerator<T> = observable._startOperator();
+  const generator: AnyGenerator<T> = generatorFrom(observable);
   const { value } = await generator.next();
   return value;
+}
+
+export async function lastValueFrom<T>(observable: Observable<T>): Promise<T> {
+  const empty: unique symbol = Symbol('empty');
+  const generator: AnyGenerator<T> = generatorFrom(observable);
+  let lastValue: T | typeof empty = empty;
+  for await (const value of generator) {
+    lastValue = value;
+  }
+  if (lastValue === empty) {
+    throw new Error('EmptyError');
+  }
+  return lastValue;
 }
 
 export function generatorFrom<T>(stream: Observable<T>): AnyGenerator<T> {

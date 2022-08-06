@@ -1,10 +1,15 @@
-import { defer, EMPTY, firstValueFrom, from, generatorFrom, interval, of } from '../src/helpers';
+import { defer, EMPTY, firstValueFrom, from, generatorFrom, interval, lastValueFrom, of } from '../src/helpers';
 import { tick, toHaveBeenCalledTimesWith } from './tests';
 
 describe('Helpers', () => {
   it('should work with fistValueFrom', async () => {
     const value = await firstValueFrom(from([1, 2, 3]));
     expect(value).toBe(1);
+  });
+
+  it('should work with lastValueFrom', async () => {
+    const value = await lastValueFrom(from([1, 2, 3]));
+    expect(value).toBe(3);
   });
 
   it('should work with generatorFrom', async () => {
