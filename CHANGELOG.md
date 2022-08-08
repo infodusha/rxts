@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/infodusha/rxts/compare/v0.2.1...v0.2.2) (2022-08-08)
+
+
+### Features
+
+* add lastValueFrom helper ([e4a5328](https://github.com/infodusha/rxts/commit/e4a5328ddc051265ee610003ee697be3a3c9e337))
+
 ## 0.2.1 (2022-08-02)
 
 
