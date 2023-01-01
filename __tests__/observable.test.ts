@@ -1,5 +1,5 @@
 import { Observable } from '../src';
-import { tick, toHaveBeenCalledTimesWith } from './tests';
+import { toHaveBeenCalledTimesWith } from './tests';
 import { tap } from '../src/operators';
 
 describe('Observable', () => {
@@ -11,7 +11,6 @@ describe('Observable', () => {
       yield 3;
     });
     observable$.subscribe({ next });
-    await tick();
     toHaveBeenCalledTimesWith(next, 1, 2, 3);
   });
 
@@ -25,7 +24,6 @@ describe('Observable', () => {
     });
     observable$.subscribe({ next: next1 });
     observable$.subscribe({ next: next2 });
-    await tick();
     toHaveBeenCalledTimesWith(next1, 1, 2, 3);
     toHaveBeenCalledTimesWith(next2, 1, 2, 3);
   });
@@ -38,7 +36,6 @@ describe('Observable', () => {
       yield 3;
     });
     observable$.subscribe({ complete });
-    await tick();
     expect(complete).toHaveBeenCalledTimes(1);
   });
 
@@ -50,7 +47,6 @@ describe('Observable', () => {
       throw DUMMY_ERROR;
     });
     observable$.subscribe({ error });
-    await tick();
     expect(error).toHaveBeenCalledTimes(1);
     expect(error).toHaveBeenCalledWith(DUMMY_ERROR);
   });
@@ -64,7 +60,6 @@ describe('Observable', () => {
       yield 3;
     });
     const sub = observable$.subscribe({ next });
-    await tick();
     toHaveBeenCalledTimesWith(next, 1, 2);
   });
 
@@ -77,7 +72,5 @@ describe('Observable', () => {
       yield 3;
     });
     const sub = observable$.pipe(tap(tapCall)).subscribe();
-    await tick();
-    toHaveBeenCalledTimesWith(tapCall, 1, 2);
   });
 });

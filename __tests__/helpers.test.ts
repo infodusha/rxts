@@ -24,14 +24,12 @@ describe('Helpers', () => {
   it('should work with from observable', async () => {
     const next = jest.fn();
     from(from([1, 2, 3])).subscribe({ next });
-    await tick();
     toHaveBeenCalledTimesWith(next, 1, 2, 3);
   });
 
   it('should work with from iterable', async () => {
     const next = jest.fn();
     from([1, 2, 3]).subscribe({ next });
-    await tick();
     toHaveBeenCalledTimesWith(next, 1, 2, 3);
   });
 
@@ -54,10 +52,9 @@ describe('Helpers', () => {
     toHaveBeenCalledTimesWith(next, 1);
   });
 
-  it('should work with of', async () => {
+  it('should work with of', () => {
     const next = jest.fn();
     of(42).subscribe({ next });
-    await tick();
     expect(next).toHaveBeenCalledTimes(1);
     expect(next).toHaveBeenNthCalledWith(1, 42);
   });

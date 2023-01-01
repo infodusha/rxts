@@ -103,19 +103,39 @@ export class Observable<T> {
   subscribe(subscribe?: Subscribe<T>): Subscription {
     const sub: Subscription = new Subscription();
 
-    const run = async () => {
-      if (sub?.isCancelled) return;
-      for await (const value of this._startOperator(sub)) {
-        if (sub.isCancelled) return;
-        subscribe?.next?.(value);
-        if (sub?.isCancelled) return;
-      }
-      if (sub.isCancelled) return;
-      subscribe?.complete?.();
-    };
+    const generator = this._startOperator(sub);
 
-    run().catch(subscribe?.error);
+    if (isAsync(generator)) {
+      const run = async () => {
+        if (sub?.isCancelled) return;
+        for await (const value of generator) {
+          if (sub.isCancelled) return;
+          subscribe?.next?.(value);
+          if (sub?.isCancelled) return;
+        }
+        if (sub.isCancelled) return;
+        subscribe?.complete?.();
+      };
+
+      run().catch(subscribe?.error);
+    } else {
+      try {
+        for (const value of generator) {
+          subscribe?.next?.(value);
+          if (sub?.isCancelled) break;
+        }
+        subscribe?.complete?.();
+      } catch (e) {
+        subscribe?.error?.(e);
+      }
+    }
 
     return sub;
   }
+}
+
+export function isAsync<T>(iterable: AsyncIterable<T> | Iterable<T>) : iterable is AsyncIterable<T>;
+export function isAsync<T>(generator: AnyGenerator<T>): generator is AsyncGenerator<T>;
+export function isAsync<T>(generatorOrIterable: AnyGenerator<T> | AsyncIterable<T> | Iterable<T>): boolean {
+  return (generatorOrIterable as AsyncIterable<T>)[Symbol.asyncIterator] !== undefined;
 }

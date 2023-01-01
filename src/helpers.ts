@@ -1,4 +1,4 @@
-import { AnyGenerator, Observable, StartOperator } from './index';
+import { AnyGenerator, isAsync, Observable, StartOperator } from './index';
 import { Subscription } from './subscription';
 
 export type ObservableInput<T> = Observable<T> | Iterable<T> | AsyncIterable<T> | Promise<T>;
@@ -30,12 +30,19 @@ export function from<T>(data: ObservableInput<T>): Observable<T> {
   if (data instanceof Observable) {
     return data;
   }
-  return new Observable<T>(() => async function* () {
-    if (data instanceof Promise) {
-      yield await data;
-      return;
-    }
-    for await (const item of data) {
+  if (data instanceof Promise || isAsync(data)) {
+    return new Observable<T>(() => async function* () {
+      if (data instanceof Promise) {
+        yield await data;
+        return;
+      }
+      for await (const item of data) {
+        yield item;
+      }
+    });
+  }
+  return new Observable<T>(() => function* () {
+    for (const item of data) {
       yield item;
     }
   });
@@ -85,7 +92,7 @@ export function operator<T, R>(operator: (generator: AnyGenerator<T>, sub?: Subs
   };
 }
 
-function* noop() {
+function* noop(): Generator<never, void> {
   // NOOP
 }
 

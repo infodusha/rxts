@@ -30,5 +30,6 @@ module.exports = {
     }],
     'generator-star-spacing': ['error', 'after'],
     'yield-star-spacing': ['error', 'after'],
+    'no-redeclare': 'off',
   },
 };
