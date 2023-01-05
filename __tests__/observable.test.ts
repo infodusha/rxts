@@ -1,6 +1,5 @@
 import { Observable } from '../src';
 import { toHaveBeenCalledTimesWith } from './tests';
-import { tap } from '../src/operators';
 
 describe('Observable', () => {
   it('should do next', async () => {
@@ -71,6 +70,6 @@ describe('Observable', () => {
       sub.unsubscribe();
       yield 3;
     });
-    const sub = observable$.pipe(tap(tapCall)).subscribe();
+    const sub = observable$.tap(tapCall).subscribe();
   });
 });

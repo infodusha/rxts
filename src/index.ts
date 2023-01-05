@@ -1,4 +1,5 @@
 import { Subscription } from './subscription';
+import { isAsync } from './internal';
 
 export type AnyGenerator<T> = Generator<T> | AsyncGenerator<T>;
 export type StartOperator<T> = (sub?: Subscription) => AnyGenerator<T>;
@@ -11,93 +12,18 @@ export interface Subscribe<T> {
     complete?(): void;
 }
 
-export class Observable<T> {
+declare global {
+  interface Observable<T> {
+    readonly _startOperator: StartOperator<T>
+    subscribe(subscribe?: Subscribe<T>): Subscription
+  }
+}
+
+class _Observable<T> {
   public readonly _startOperator: StartOperator<T>;
 
   constructor(init: () => StartOperator<T>) {
     this._startOperator = init();
-  }
-
-  pipe(): Observable<T>;
-  pipe<A>(op1: Operator<T, A>): Observable<A>;
-  pipe<A, B>(op1: Operator<T, A>, op2: Operator<A, B>): Observable<B>;
-  pipe<A, B, C>(op1: Operator<T, A>, op2: Operator<A, B>, op3: Operator<B, C>): Observable<C>;
-  pipe<A, B, C, D>(
-        op1: Operator<T, A>,
-        op2: Operator<A, B>,
-        op3: Operator<B, C>,
-        op4: Operator<C, D>
-    ): Observable<D>;
-
-  pipe<A, B, C, D, E>(
-        op1: Operator<T, A>,
-        op2: Operator<A, B>,
-        op3: Operator<B, C>,
-        op4: Operator<C, D>,
-        op5: Operator<D, E>
-    ): Observable<E>;
-
-  pipe<A, B, C, D, E, F>(
-        op1: Operator<T, A>,
-        op2: Operator<A, B>,
-        op3: Operator<B, C>,
-        op4: Operator<C, D>,
-        op5: Operator<D, E>,
-        op6: Operator<E, F>
-    ): Observable<F>;
-
-  pipe<A, B, C, D, E, F, G>(
-        op1: Operator<T, A>,
-        op2: Operator<A, B>,
-        op3: Operator<B, C>,
-        op4: Operator<C, D>,
-        op5: Operator<D, E>,
-        op6: Operator<E, F>,
-        op7: Operator<F, G>
-    ): Observable<G>;
-
-  pipe<A, B, C, D, E, F, G, H>(
-        op1: Operator<T, A>,
-        op2: Operator<A, B>,
-        op3: Operator<B, C>,
-        op4: Operator<C, D>,
-        op5: Operator<D, E>,
-        op6: Operator<E, F>,
-        op7: Operator<F, G>,
-        op8: Operator<G, H>
-    ): Observable<H>;
-
-  pipe<A, B, C, D, E, F, G, H, I>(
-        op1: Operator<T, A>,
-        op2: Operator<A, B>,
-        op3: Operator<B, C>,
-        op4: Operator<C, D>,
-        op5: Operator<D, E>,
-        op6: Operator<E, F>,
-        op7: Operator<F, G>,
-        op8: Operator<G, H>,
-        op9: Operator<H, I>
-    ): Observable<I>;
-
-  pipe<A, B, C, D, E, F, G, H, I>(
-        op1: Operator<T, A>,
-        op2: Operator<A, B>,
-        op3: Operator<B, C>,
-        op4: Operator<C, D>,
-        op5: Operator<D, E>,
-        op6: Operator<E, F>,
-        op7: Operator<F, G>,
-        op8: Operator<G, H>,
-        op9: Operator<H, I>,
-        ...operations: Operator<any, any>[]
-    ): Observable<unknown>;
-
-  pipe(...operators: Operator<T, any>[]): Observable<unknown> {
-    let startOperator = this._startOperator.bind(this);
-    for (const operator of operators) {
-      startOperator = operator(startOperator);
-    }
-    return new Observable<unknown>(() => startOperator);
   }
 
   subscribe(subscribe?: Subscribe<T>): Subscription {
@@ -134,8 +60,7 @@ export class Observable<T> {
   }
 }
 
-export function isAsync<T>(iterable: AsyncIterable<T> | Iterable<T>) : iterable is AsyncIterable<T>;
-export function isAsync<T>(generator: AnyGenerator<T>): generator is AsyncGenerator<T>;
-export function isAsync<T>(generatorOrIterable: AnyGenerator<T> | AsyncIterable<T> | Iterable<T>): boolean {
-  return (generatorOrIterable as AsyncIterable<T>)[Symbol.asyncIterator] !== undefined;
-}
+// eslint-disable-next-line no-undef,no-use-before-define
+export const Observable = _Observable as unknown as { new <T>(init: () => StartOperator<T>): Observable<T> };
+
+export { registerOperator } from './operators/index';

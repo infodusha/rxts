@@ -1,5 +1,6 @@
-import { AnyGenerator, isAsync, Observable, StartOperator } from './index';
+import { AnyGenerator, Observable, StartOperator } from './index';
 import { Subscription } from './subscription';
+import { isAsync } from './internal';
 
 export type ObservableInput<T> = Observable<T> | Iterable<T> | AsyncIterable<T> | Promise<T>;
 

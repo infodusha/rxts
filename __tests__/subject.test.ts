@@ -1,6 +1,5 @@
 import { Subject } from '../src/subject';
 import { tick } from './tests';
-import { map } from '../src/operators';
 
 describe('Subject', () => {
   it('should work', async () => {
@@ -69,7 +68,7 @@ describe('Subject', () => {
     const subject$ = new Subject<number>();
 
     const next = jest.fn();
-    subject$.pipe(map((x) => x * 2)).subscribe({ next });
+    subject$.map((x) => x * 2).subscribe({ next });
 
     subject$.next(1);
     await tick();
@@ -90,7 +89,7 @@ describe('Subject', () => {
 
     const next1 = jest.fn();
     const next2 = jest.fn();
-    const observable$ = subject$.pipe(map((x) => x * 2));
+    const observable$ = subject$.map((x) => x * 2);
     observable$.subscribe({ next: next1 });
     observable$.subscribe({ next: next2 });
 
