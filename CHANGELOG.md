@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.3.0](https://github.com/infodusha/rxts/compare/v0.2.1...v0.3.0) (2023-01-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* new operators syntax
+
+### Features
+
+* add lastValueFrom helper ([e4a5328](https://github.com/infodusha/rxts/commit/e4a5328ddc051265ee610003ee697be3a3c9e337))
+* new operators syntax ([241842d](https://github.com/infodusha/rxts/commit/241842d8f334b15b6c42e19c402628e6ca2fedea))
+* partially sync api ([0a13cc9](https://github.com/infodusha/rxts/commit/0a13cc93ab1bb4ae27d92cc2eb9fb1d1a394a4d0))
+
+
+### Bug Fixes
+
+* small refactor ([5ba857e](https://github.com/infodusha/rxts/commit/5ba857ed9d5b31fea8610571c7c72d840eb7a78f))
+
 ## 0.2.1 (2022-08-02)
 
 
