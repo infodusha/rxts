@@ -31,24 +31,30 @@ class _Observable<T> {
 
     const generator = this._startOperator(sub);
 
-    if (isAsync(generator)) {
-      const run = async () => {
-        if (sub?.isCancelled) return;
-        for await (const value of generator) {
-          if (sub.isCancelled) return;
-          subscribe?.next?.(value);
-          if (sub?.isCancelled) return;
-        }
-        if (sub.isCancelled) return;
+    function checkComplete(): boolean {
+      if (sub.isCancelled) {
         subscribe?.complete?.();
-      };
+      }
+      return sub.isCancelled;
+    }
+
+    if (isAsync(generator)) {
+      async function run(): Promise<void> {
+        if (checkComplete()) return;
+        for await (const value of generator) {
+          if (checkComplete()) return;
+          subscribe?.next?.(value);
+          if (checkComplete()) return;
+        }
+        subscribe?.complete?.();
+      }
 
       run().catch(subscribe?.error);
     } else {
       try {
         for (const value of generator) {
           subscribe?.next?.(value);
-          if (sub?.isCancelled) break;
+          if (sub.isCancelled) break;
         }
         subscribe?.complete?.();
       } catch (e) {
