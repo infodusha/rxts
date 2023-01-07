@@ -64,7 +64,7 @@ describe('Subject', () => {
     expect(next2).toHaveBeenNthCalledWith(3, 3);
   });
 
-  it('should work with pipe', async () => {
+  it('should work with operator', async () => {
     const subject$ = new Subject<number>();
 
     const next = jest.fn();
@@ -84,7 +84,7 @@ describe('Subject', () => {
     expect(next).toHaveBeenNthCalledWith(3, 6);
   });
 
-  it('should work with pipe and multiple subscribers', async () => {
+  it('should work with operator and multiple subscribers', async () => {
     const subject$ = new Subject<number>();
 
     const next1 = jest.fn();

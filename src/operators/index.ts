@@ -7,6 +7,7 @@ import { filter } from './filter';
 import { delay } from './delay';
 import { take } from './take';
 import { distinctUntilChanged } from './distinct-until-changed';
+import { startWith } from './start-with';
 
 export function registerOperator<T, K extends keyof Observable<T>>(key: K, operator: (...args: Parameters<Observable<T>[K]>) => (startOperator: StartOperator<T>) => StartOperator<T>): void {
   if (key in Observable.prototype) {
@@ -31,3 +32,4 @@ registerOperator('filter', filter);
 registerOperator('delay', delay);
 registerOperator('take', take);
 registerOperator('distinctUntilChanged', distinctUntilChanged);
+registerOperator('startWith', startWith);

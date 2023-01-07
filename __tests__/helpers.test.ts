@@ -21,13 +21,13 @@ describe('Helpers', () => {
     expect(result).toStrictEqual([1, 2, 3]);
   });
 
-  it('should work with from observable', async () => {
+  it('should work with from observable', () => {
     const next = jest.fn();
     from(from([1, 2, 3])).subscribe({ next });
     toHaveBeenCalledTimesWith(next, 1, 2, 3);
   });
 
-  it('should work with from iterable', async () => {
+  it('should work with from iterable', () => {
     const next = jest.fn();
     from([1, 2, 3]).subscribe({ next });
     toHaveBeenCalledTimesWith(next, 1, 2, 3);

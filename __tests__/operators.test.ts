@@ -30,9 +30,6 @@ describe('Operators', () => {
     from([1, 2, 3, 4]).filter((x) => x > 2).subscribe({ next });
     await tick();
     toHaveBeenCalledTimesWith(next, 3, 4);
-    expect(next).toHaveBeenCalledTimes(2);
-    expect(next).toHaveBeenNthCalledWith(1, 3);
-    expect(next).toHaveBeenNthCalledWith(2, 4);
   });
 
   it('should infer types up to 9 operators', async () => {
@@ -78,5 +75,13 @@ describe('Operators', () => {
       .subscribe({ next });
     await tick();
     toHaveBeenCalledTimesWith(next, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 });
+  });
+
+  it('should work with startWith', async () => {
+    const next = jest.fn();
+    from([2, 3]).startWith(0, 1).subscribe({ next });
+    expect(next).not.toHaveBeenCalled();
+    await tick();
+    toHaveBeenCalledTimesWith(next, 0, 1, 2, 3);
   });
 });
