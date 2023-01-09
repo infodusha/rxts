@@ -1,4 +1,4 @@
-import { AnyGenerator, Observable, StartOperator } from './index';
+import { AnyGenerator, Observable } from './index';
 import { Subscription } from './subscription';
 import { isAsync } from './internal';
 
@@ -71,26 +71,26 @@ export function interval(period = 0): Observable<number> {
   });
 }
 
-export function itemOperator<T, R>(operator: (item: T) => AnyGenerator<R>): (startOperator: StartOperator<T>) => StartOperator<R> {
-  return (startOperator) => async function* (sub?: Subscription) {
+export function itemOperator<T, R>(operator: (item: T) => AnyGenerator<R>): (obs$: Observable<T>) => Observable<R> {
+  return (obs$) => new Observable<R>(() => async function* (sub?: Subscription) {
     if (sub?.isCancelled) return;
-    const generator = startOperator(sub);
+    const generator = obs$._startOperator(sub);
     for await (const value of generator) {
       if (sub?.isCancelled) return;
       yield* operator(value);
     }
-  };
+  });
 }
 
-export function operator<T, R>(operator: (generator: AnyGenerator<T>, sub?: Subscription) => AnyGenerator<R>): (startOperator: StartOperator<T>) => StartOperator<R> {
-  return (startOperator) => async function* (sub?: Subscription) {
+export function operator<T, R>(operator: (generator: AnyGenerator<T>, sub?: Subscription) => AnyGenerator<R>): (obs$: Observable<T>) => Observable<R> {
+  return (obs$) => new Observable<R>(() => async function* (sub?: Subscription) {
     if (sub?.isCancelled) return;
-    const generator = startOperator(sub);
+    const generator = obs$._startOperator(sub);
     for await (const value of operator(generator, sub)) {
       if (sub?.isCancelled) return;
       yield value;
     }
-  };
+  });
 }
 
 function* noop(): Generator<never, void> {

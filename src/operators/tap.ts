@@ -1,4 +1,5 @@
 import { itemOperator } from '../helpers';
+import { UnaryOperator } from '../index';
 
 declare global {
     interface Observable<T> {
@@ -6,7 +7,7 @@ declare global {
     }
 }
 
-export function tap<T>(callback: (value: T) => void) {
+export function tap<T>(callback: (value: T) => void): UnaryOperator<T> {
   return itemOperator(function* (value: T) {
     callback(value);
     yield value;

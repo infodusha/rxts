@@ -1,4 +1,4 @@
-import { Observable, StartOperator } from '../index';
+import { Observable, Operator } from '../index';
 
 import { tap } from './tap';
 import { map } from './map';
@@ -9,17 +9,19 @@ import { take } from './take';
 import { distinctUntilChanged } from './distinct-until-changed';
 import { startWith } from './start-with';
 
-export function registerOperator<T, K extends keyof Observable<T>>(key: K, operator: (...args: Parameters<Observable<T>[K]>) => (startOperator: StartOperator<T>) => StartOperator<T>): void {
+type OperatorObserved<K> = K extends (...args: never[]) => Observable<infer T> ? T : never;
+
+type OperatorFn<T, K extends keyof Observable<T>> = (...args: Parameters<Observable<T>[K]>) => Operator<T, OperatorObserved<Observable<T>[K]>>
+
+export function registerOperator<T, K extends keyof Observable<T>>(key: K, operator: OperatorFn<T, K>): void {
   if (key in Observable.prototype) {
     throw new Error(`${key} already exists in Observable`);
   }
 
   Object.defineProperty(Observable.prototype, key, {
-    get(): (...args: Parameters<Observable<T>[K]>) => Observable<T> {
-      const startOperator: StartOperator<T> = this._startOperator.bind(this);
+    get(): (...args: Parameters<Observable<T>[K]>) => Observable<OperatorObserved<Observable<T>[K]>> {
       return (...args: Parameters<Observable<T>[K]>) => {
-        const op = operator(...args);
-        return new Observable<T>(() => op(startOperator));
+        return operator(...args)(this);
       };
     },
   });

@@ -3,7 +3,8 @@ import { isAsync } from './internal';
 
 export type AnyGenerator<T> = Generator<T> | AsyncGenerator<T>;
 export type StartOperator<T> = (sub?: Subscription) => AnyGenerator<T>;
-export type Operator<T, R> = (startOperator: StartOperator<T>) => StartOperator<R>;
+// eslint-disable-next-line no-undef
+export type Operator<T, R> = (obs$: Observable<T>) => Observable<R>;
 export type UnaryOperator<T> = Operator<T, T>;
 
 export interface Subscribe<T> {
@@ -23,7 +24,7 @@ class _Observable<T> {
   public readonly _startOperator: StartOperator<T>;
 
   constructor(init: () => StartOperator<T>) {
-    this._startOperator = init();
+    this._startOperator = init().bind(this);
   }
 
   subscribe(subscribe?: Subscribe<T>): Subscription {

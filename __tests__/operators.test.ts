@@ -1,5 +1,6 @@
 import { from } from '../src/helpers';
 import { tick, toHaveBeenCalledTimesWith } from './tests';
+import { UnaryOperator, registerOperator } from '../src';
 
 describe('Operators', () => {
   it('should work with tap', async () => {
@@ -84,4 +85,21 @@ describe('Operators', () => {
     await tick();
     toHaveBeenCalledTimesWith(next, 0, 1, 2, 3);
   });
+
+  it('should support custom operators', async () => {
+    registerOperator('customOperator', customOperator);
+    const tapCall = jest.fn();
+    from([1, 2, 3]).customOperator(tapCall).subscribe();
+    await tick();
+    toHaveBeenCalledTimesWith(tapCall, 1, 2, 3);
+  });
 });
+
+declare global {
+    interface Observable<T> {
+        customOperator(cb: () => void): Observable<T>;
+    }
+}
+function customOperator<T>(cb: () => void): UnaryOperator<T> {
+  return (sub$) => sub$.tap(cb);
+}
