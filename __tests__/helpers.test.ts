@@ -1,4 +1,4 @@
-import { defer, EMPTY, firstValueFrom, from, generatorFrom, interval, lastValueFrom, of } from '../src/helpers';
+import { defer, EMPTY, firstValueFrom, from, generatorFrom, interval, lastValueFrom, of } from '../src/helpers/';
 import { tick, toHaveBeenCalledTimesWith } from './tests';
 
 describe('Helpers', () => {

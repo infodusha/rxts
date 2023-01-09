@@ -1,5 +1,9 @@
 __tests__/
 src/
+.github/
 .gitignore
 jest.config.js
 tsconfig.json
+.eslintignore
+.eslintrc.js
+.release-please-manifest.json

@@ -1,5 +1,5 @@
 import { Operator } from '../index';
-import { itemOperator } from '../helpers';
+import { itemOperator } from './index';
 
 declare global {
     interface Observable<T> {

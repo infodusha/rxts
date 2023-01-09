@@ -1,5 +1,5 @@
 import { AnyGenerator, UnaryOperator } from '../index';
-import { operator } from '../helpers';
+import { operator } from './index';
 
 declare global {
     interface Observable<T> {

@@ -1,6 +1,6 @@
 import { AnyGenerator, UnaryOperator } from '../index';
-import { operator } from '../helpers';
 import { Subscription } from '../subscription';
+import { operator } from './index';
 
 declare global {
     interface Observable<T> {

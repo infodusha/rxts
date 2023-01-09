@@ -1,5 +1,6 @@
 import { Observable, Operator } from '../index';
-import { generatorFrom, itemOperator } from '../helpers';
+import { generatorFrom } from '../helpers/';
+import { itemOperator } from './index';
 
 declare global {
     interface Observable<T> {
