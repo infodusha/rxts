@@ -4,7 +4,7 @@ import { itemOperator } from './index';
 
 declare global {
     interface Observable<T> {
-        switchMap<R>(callback: (value: T) => Observable<R>): Observable<T>;
+        switchMap<R>(callback: (value: T) => Observable<R>): Observable<R>;
     }
 }
 
