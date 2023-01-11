@@ -8,16 +8,14 @@ export class Subject<T> extends Observable<T> {
   private _isComplete = false;
 
   constructor() {
-    super(() => {
-      return async function* (this: Subject<T>) {
-        while (true) {
-          const value: T | typeof COMPLETE = await this._promise;
-          if (value === COMPLETE) {
-            return;
-          }
-          yield value;
+    super(async function* (this: Subject<T>) {
+      while (true) {
+        const value: T | typeof COMPLETE = await this._promise;
+        if (value === COMPLETE) {
+          return;
         }
-      };
+        yield value;
+      }
     });
   }
 

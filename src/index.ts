@@ -23,8 +23,8 @@ declare global {
 class _Observable<T> {
   public readonly _startOperator: StartOperator<T>;
 
-  constructor(init: () => StartOperator<T>) {
-    this._startOperator = init().bind(this);
+  constructor(readonly startOperator: StartOperator<T>) {
+    this._startOperator = startOperator.bind(this);
   }
 
   subscribe(subscribe?: Subscribe<T>): Subscription {
@@ -68,6 +68,6 @@ class _Observable<T> {
 }
 
 // eslint-disable-next-line no-undef,no-use-before-define
-export const Observable = _Observable as unknown as { new <T>(init: () => StartOperator<T>): Observable<T> };
+export const Observable = _Observable as unknown as { new <T>(startOperator: StartOperator<T>): Observable<T> };
 
 export { registerOperator } from './operators/index';

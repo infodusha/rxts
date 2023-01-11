@@ -29,7 +29,7 @@ export function registerOperator<T, K extends keyof Observable<T>>(key: K, opera
 }
 
 export function itemOperator<T, R>(operator: (item: T) => AnyGenerator<R>): (obs$: Observable<T>) => Observable<R> {
-  return (obs$) => new Observable<R>(() => async function* (sub?: Subscription) {
+  return (obs$) => new Observable<R>(async function* (sub?: Subscription) {
     if (sub?.isCancelled) return;
     const generator = obs$._startOperator(sub);
     for await (const value of generator) {
@@ -40,7 +40,7 @@ export function itemOperator<T, R>(operator: (item: T) => AnyGenerator<R>): (obs
 }
 
 export function operator<T, R>(operator: (generator: AnyGenerator<T>, sub?: Subscription) => AnyGenerator<R>): (obs$: Observable<T>) => Observable<R> {
-  return (obs$) => new Observable<R>(() => async function* (sub?: Subscription) {
+  return (obs$) => new Observable<R>(async function* (sub?: Subscription) {
     if (sub?.isCancelled) return;
     const generator = obs$._startOperator(sub);
     for await (const value of operator(generator, sub)) {

@@ -7,7 +7,7 @@ export function from<T>(data: ObservableInput<T>): Observable<T> {
     return data;
   }
   if (data instanceof Promise || isAsync(data)) {
-    return new Observable<T>(() => async function* () {
+    return new Observable<T>(async function* () {
       if (data instanceof Promise) {
         yield await data;
         return;
@@ -17,7 +17,7 @@ export function from<T>(data: ObservableInput<T>): Observable<T> {
       }
     });
   }
-  return new Observable<T>(() => function* () {
+  return new Observable<T>(function* () {
     for (const item of data) {
       yield item;
     }
