@@ -9,7 +9,7 @@ export class Subject<T> extends Observable<T> {
 
   constructor() {
     super(async function* (this: Subject<T>) {
-      while (true) {
+      for (;;) {
         const value: T | typeof COMPLETE = await this._promise;
         if (value === COMPLETE) {
           return;
