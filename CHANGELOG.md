@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.4.0](https://github.com/infodusha/rxts/compare/v0.3.0...v0.4.0) (2023-01-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* refactor helpers to folder
+
+### Features
+
+* add startWith operator ([c1fe44b](https://github.com/infodusha/rxts/commit/c1fe44b4a0a1937d5cbad51312ab331045e7d3bc))
+* custom operators support ([764c6d8](https://github.com/infodusha/rxts/commit/764c6d866689e82bbbb416d6484c76172a2b3527))
+* refactor helpers to folder ([9b4d65f](https://github.com/infodusha/rxts/commit/9b4d65ff6bc2eb803c0f0b79f6009bd1ce537aaf))
+* simplify init ([b5e9cdb](https://github.com/infodusha/rxts/commit/b5e9cdb95e53b3006b40ba85cca06738d32d9103))
+
+
+### Bug Fixes
+
+* small changes ([9f3fdc8](https://github.com/infodusha/rxts/commit/9f3fdc813337691c44e0065e8f22294e8b1a0f28))
+* switchMap type ([f7cef4e](https://github.com/infodusha/rxts/commit/f7cef4e62f4ed91cea7c55018ba209893845b7b4))
+
 ## [0.3.0](https://github.com/infodusha/rxts/compare/v0.2.1...v0.3.0) (2023-01-06)
 
 
