@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/infodusha/rxts/compare/v0.4.0...v0.4.1) (2023-01-14)
+
+
+### Features
+
+* subscription now not optional ([7e662b9](https://github.com/infodusha/rxts/commit/7e662b907eaadfb6b9f65800bd8877a6f97a1990))
+
 ## [0.4.0](https://github.com/infodusha/rxts/compare/v0.3.0...v0.4.0) (2023-01-11)
 
 
