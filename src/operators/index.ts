@@ -28,23 +28,23 @@ export function registerOperator<T, K extends keyof Observable<T>>(key: K, opera
   });
 }
 
-export function itemOperator<T, R>(operator: (item: T) => AnyGenerator<R>): (obs$: Observable<T>) => Observable<R> {
-  return (obs$) => new Observable<R>(async function* (sub?: Subscription) {
-    if (sub?.isCancelled) return;
+export function itemOperator<T, R>(operator: (item: T, sub: Subscription) => AnyGenerator<R>): (obs$: Observable<T>) => Observable<R> {
+  return (obs$) => new Observable<R>(async function* (sub: Subscription) {
+    if (sub.isCancelled) return;
     const generator = obs$._startOperator(sub);
     for await (const value of generator) {
-      if (sub?.isCancelled) return;
-      yield* operator(value);
+      if (sub.isCancelled) return;
+      yield* operator(value, sub);
     }
   });
 }
 
-export function operator<T, R>(operator: (generator: AnyGenerator<T>, sub?: Subscription) => AnyGenerator<R>): (obs$: Observable<T>) => Observable<R> {
-  return (obs$) => new Observable<R>(async function* (sub?: Subscription) {
-    if (sub?.isCancelled) return;
+export function operator<T, R>(operator: (generator: AnyGenerator<T>, sub: Subscription) => AnyGenerator<R>): (obs$: Observable<T>) => Observable<R> {
+  return (obs$) => new Observable<R>(async function* (sub: Subscription) {
+    if (sub.isCancelled) return;
     const generator = obs$._startOperator(sub);
     for await (const value of operator(generator, sub)) {
-      if (sub?.isCancelled) return;
+      if (sub.isCancelled) return;
       yield value;
     }
   });

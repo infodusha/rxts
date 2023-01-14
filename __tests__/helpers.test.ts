@@ -1,5 +1,6 @@
 import { defer, EMPTY, firstValueFrom, from, generatorFrom, interval, lastValueFrom, of } from '../src/helpers/';
 import { tick, toHaveBeenCalledTimesWith } from './tests';
+import { Subscription } from '../src/subscription';
 
 describe('Helpers', () => {
   it('should work with fistValueFrom', async () => {
@@ -15,7 +16,8 @@ describe('Helpers', () => {
   it('should work with generatorFrom', async () => {
     const observable$ = from([1, 2, 3]);
     const result = [];
-    for await (const value of generatorFrom(observable$)) {
+    const sub = new Subscription();
+    for await (const value of generatorFrom(observable$, sub)) {
       result.push(value);
     }
     expect(result).toStrictEqual([1, 2, 3]);

@@ -10,7 +10,7 @@ declare global {
 
 // TODO That may be works as mergeMap, i am not sure about that
 export function switchMap<T, R>(callback: (value: T) => Observable<R>): Operator<T, R> {
-  return itemOperator(async function* (value: T) {
-    yield* generatorFrom(callback(value));
+  return itemOperator(async function* (value: T, sub) {
+    yield* generatorFrom(callback(value), sub);
   });
 }

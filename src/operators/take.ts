@@ -9,10 +9,10 @@ declare global {
 }
 
 export function take<T>(count: number): UnaryOperator<T> {
-  return operator(async function* (generator: AnyGenerator<T>, sub?: Subscription) {
+  return operator(async function* (generator: AnyGenerator<T>, sub: Subscription) {
     let i = count;
     for await (const value of generator) {
-      if (sub?.isCancelled) return;
+      if (sub.isCancelled) return;
       if (i-- <= 0) {
         return;
       }
@@ -20,7 +20,7 @@ export function take<T>(count: number): UnaryOperator<T> {
       if (i <= 0) {
         return;
       }
-      if (sub?.isCancelled) return;
+      if (sub.isCancelled) return;
     }
   });
 }
